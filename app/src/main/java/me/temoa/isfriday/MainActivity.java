@@ -13,11 +13,14 @@ public class MainActivity extends Activity {
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.friday_widget_layout);
-    update();
+
+    int primaryColor = getResources().getColor(R.color.colorPrimary, getTheme());
+    getWindow().setNavigationBarColor(primaryColor);
+    update(primaryColor);
   }
 
-  private void update() {
-    getWindow().getDecorView().setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+  private void update(int primaryColor) {
+    getWindow().getDecorView().setBackgroundColor(primaryColor);
 
     TextView leftTv = findViewById(R.id.tv_left);
     TextView rightTv = findViewById(R.id.tv_right);

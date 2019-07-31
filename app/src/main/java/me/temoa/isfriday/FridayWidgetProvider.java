@@ -35,8 +35,11 @@ public class FridayWidgetProvider extends AppWidgetProvider {
   public void onEnabled(Context context) {
     super.onEnabled(context);
     mTimeChangeReceiver = new TimeChangeReceiver();
-    context.getApplicationContext().registerReceiver(mTimeChangeReceiver, new IntentFilter(Intent.ACTION_DATE_CHANGED));
-//    context.getApplicationContext().registerReceiver(mTimeChangeReceiver, new IntentFilter(Intent.ACTION_TIME_TICK));
+    IntentFilter intentFilter = new IntentFilter();
+    // Intent.ACTION_TIME_TICK ?
+    intentFilter.addAction(Intent.ACTION_TIME_CHANGED);
+    intentFilter.addAction(Intent.ACTION_DATE_CHANGED);
+    context.getApplicationContext().registerReceiver(mTimeChangeReceiver, intentFilter);
     update(context);
   }
 
@@ -59,10 +62,6 @@ public class FridayWidgetProvider extends AppWidgetProvider {
 
     Calendar calendar = Calendar.getInstance();
     int date = calendar.get(Calendar.DAY_OF_WEEK);
-//    int max = 7;
-//    int min = 1;
-//    Random random = new Random();
-//    int date = random.nextInt(max) % (max - min + 1) + min;
 
     int leftDrawableResId;
     int rightDrawableResId = R.drawable.emoji_u1f914;
