@@ -2,15 +2,23 @@ package me.temoa.isfriday;
 
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
-import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
-import android.util.Log;
+import android.os.Handler;
+import android.os.Looper;
 import android.widget.RemoteViews;
 
 import java.util.Calendar;
+import java.util.concurrent.TimeUnit;
+
+import androidx.annotation.NonNull;
+import androidx.work.Constraints;
+import androidx.work.ExistingPeriodicWorkPolicy;
+import androidx.work.PeriodicWorkRequest;
+import androidx.work.WorkManager;
+import androidx.work.Worker;
+import androidx.work.WorkerParameters;
 
 /**
  * Created by lai
@@ -20,35 +28,29 @@ public class FridayWidgetProvider extends AppWidgetProvider {
 
   private static final String TAG = "FridayWidgetProvider";
 
-  private TimeChangeReceiver mTimeChangeReceiver;
-
-  public class TimeChangeReceiver extends BroadcastReceiver {
-
-    @Override
-    public void onReceive(Context context, Intent intent) {
-      Intent i = new Intent("android.appwidget.action.APPWIDGET_UPDATE");
-      context.sendBroadcast(i);
-    }
-  }
-
   @Override
   public void onEnabled(Context context) {
     super.onEnabled(context);
-    mTimeChangeReceiver = new TimeChangeReceiver();
-    IntentFilter intentFilter = new IntentFilter();
-    // Intent.ACTION_TIME_TICK ?
-    intentFilter.addAction(Intent.ACTION_TIME_CHANGED);
-    intentFilter.addAction(Intent.ACTION_DATE_CHANGED);
-    context.getApplicationContext().registerReceiver(mTimeChangeReceiver, intentFilter);
+
+    Constraints constraints = new Constraints.Builder()
+            .setRequiresBatteryNotLow(true)
+            .build();
+    PeriodicWorkRequest request
+            = new PeriodicWorkRequest.Builder(DateUpdateWorker.class, 1, TimeUnit.MINUTES)
+            .setConstraints(constraints)
+            .addTag(TAG)
+            .build();
+    WorkManager
+            .getInstance(context)
+            .enqueueUniquePeriodicWork("FridayWidgetProvider", ExistingPeriodicWorkPolicy.KEEP, request);
+
     update(context);
   }
 
   @Override
   public void onDisabled(Context context) {
+    WorkManager.getInstance(context).cancelAllWorkByTag(TAG);
     super.onDisabled(context);
-    if (mTimeChangeReceiver != null) {
-      context.getApplicationContext().unregisterReceiver(mTimeChangeReceiver);
-    }
   }
 
   @Override
@@ -58,8 +60,6 @@ public class FridayWidgetProvider extends AppWidgetProvider {
   }
 
   private void update(Context context) {
-    Log.d(TAG, "update() called");
-
     Calendar calendar = Calendar.getInstance();
     int date = calendar.get(Calendar.DAY_OF_WEEK);
 
@@ -110,5 +110,32 @@ public class FridayWidgetProvider extends AppWidgetProvider {
     views.setTextViewText(R.id.tv_right, rightText);
     ComponentName name = new ComponentName(context, FridayWidgetProvider.class);
     AppWidgetManager.getInstance(context).updateAppWidget(name, views);
+  }
+
+  public static class DateUpdateWorker extends Worker {
+
+    private Context mContext;
+
+    public DateUpdateWorker(@NonNull Context context, @NonNull WorkerParameters workerParams) {
+      super(context, workerParams);
+      mContext = context;
+    }
+
+    @NonNull
+    @Override
+    public Result doWork() {
+      runOnUIThread(new Runnable() {
+        @Override
+        public void run() {
+          Intent i = new Intent("android.appwidget.action.APPWIDGET_UPDATE");
+          mContext.sendBroadcast(i);
+        }
+      });
+      return Result.success();
+    }
+
+    private void runOnUIThread(Runnable runnable) {
+      new Handler(Looper.getMainLooper()).post(runnable);
+    }
   }
 }
