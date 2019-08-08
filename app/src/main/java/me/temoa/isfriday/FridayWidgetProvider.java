@@ -36,13 +36,13 @@ public class FridayWidgetProvider extends AppWidgetProvider {
             .setRequiresBatteryNotLow(true)
             .build();
     PeriodicWorkRequest request
-            = new PeriodicWorkRequest.Builder(DateUpdateWorker.class, 1, TimeUnit.MINUTES)
+            = new PeriodicWorkRequest.Builder(DateUpdateWorker.class, 1, TimeUnit.HOURS)
             .setConstraints(constraints)
             .addTag(TAG)
             .build();
     WorkManager
             .getInstance(context)
-            .enqueueUniquePeriodicWork("FridayWidgetProvider", ExistingPeriodicWorkPolicy.KEEP, request);
+            .enqueueUniquePeriodicWork("FridayWidgetProvider", ExistingPeriodicWorkPolicy.REPLACE, request);
 
     update(context);
   }
