@@ -4,16 +4,18 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/ll"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:layout_gravity="center"
-    android:background="@android:color/transparent"
-    android:orientation="horizontal"
     android:paddingStart="16dp"
-    android:paddingTop="8dp"
     android:paddingEnd="16dp"
+    android:paddingTop="8dp"
     android:paddingBottom="8dp"
+    android:gravity="center"
+    android:orientation="horizontal"
+    android:background="@android:color/transparent"
     tools:background="@null"
-    tools:context=".MainActivity">
+    tools:context=".MainActivity"
+    android:baselineAligned="false">
 
     <LinearLayout
         android:layout_width="0dp"
@@ -26,12 +28,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:paddingTop="6dp"
+            android:paddingBottom="6dp"
             android:background="@drawable/shape_rectangle"
             android:maxLines="1"
-            android:paddingStart="16dp"
-            android:paddingTop="6dp"
-            android:paddingEnd="16dp"
-            android:paddingBottom="6dp"
             android:textSize="16sp"
             tools:text="Hello World!" />
 
@@ -39,15 +41,15 @@
             android:layout_width="6dp"
             android:layout_height="6dp"
             android:layout_marginStart="32dp"
-            android:rotation="180"
             android:scaleType="fitXY"
-            android:src="@drawable/arrow"
-            android:tint="@android:color/white" />
+            android:rotation="180"
+            android:tint="@android:color/white"
+            android:src="@drawable/arrow" />
 
         <ImageView
             android:id="@+id/iv_left"
-            android:layout_width="64dp"
-            android:layout_height="64dp"
+            android:layout_width="72dp"
+            android:layout_height="72dp"
             android:src="@drawable/emoji_u1f616_tue" />
     </LinearLayout>
 
@@ -62,12 +64,12 @@
             android:layout_height="wrap_content"
             android:layout_gravity="end"
             android:layout_marginEnd="16dp"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:paddingTop="6dp"
+            android:paddingBottom="6dp"
             android:background="@drawable/shape_rectangle"
             android:maxLines="1"
-            android:paddingStart="16dp"
-            android:paddingTop="6dp"
-            android:paddingEnd="16dp"
-            android:paddingBottom="6dp"
             android:textSize="16sp"
             tools:text="Hello World?" />
 
@@ -76,15 +78,15 @@
             android:layout_height="6dp"
             android:layout_gravity="end"
             android:layout_marginEnd="32dp"
-            android:rotation="180"
             android:scaleType="fitXY"
-            android:src="@drawable/arrow"
-            android:tint="@android:color/white" />
+            android:rotation="180"
+            android:tint="@android:color/white"
+            android:src="@drawable/arrow" />
 
         <ImageView
             android:id="@+id/iv_right"
-            android:layout_width="64dp"
-            android:layout_height="64dp"
+            android:layout_width="72dp"
+            android:layout_height="72dp"
             android:layout_gravity="end"
             android:src="@drawable/emoji_u1f914" />
     </LinearLayout>
